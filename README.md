@@ -1,6 +1,6 @@
 # IOSTNotices
 
-This repository fetches notices from the TUIOST website and stores them in the file `notices.json`. Any updates on notices are checked every hour.
+This repository fetches notices from the TUIOST website and stores them in the file `notices.json`. Any updates on notices are checked every 15 minutes.
 
 ## Usage
 
