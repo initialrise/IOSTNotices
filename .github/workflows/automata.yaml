@@ -1,31 +1,36 @@
 name: Run Command Every Hour
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '*/1 * * * *'
+    - cron: '0 * * * *' # Run at the top of every hour
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repo content
+        uses: actions/checkout@v4.1.1 # Checkout the repository content to GitHub runner
 
-      - name: checkout repo content
-        uses: actions/checkout@v4.1.1 # checkout the repository content to github runner
-      - name: setup and run script
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js and run script
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - run: npm start
+          node-version: '18'
 
-      - name: commit files
+      - name: Run npm start
+        run: npm start
+
+      - name: Commit files
         run: |
           git config --local user.email "98199146+initialrise@users.noreply.github.com"
           git config --local user.name "initialrise"
-          echo `date +%s` > commit.txt
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "Dumped notices on $(date)" --allow-empty)
+          git diff-index --quiet HEAD || git commit -m "Dumped notices on $(date)" --allow-empty
           
-      - name: push changes
+      - name: Push changes
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main 
+
