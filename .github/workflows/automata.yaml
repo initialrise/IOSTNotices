@@ -1,0 +1,31 @@
+name: Run Command Every Hour
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v4.1.1 # checkout the repository content to github runner
+      - name: setup and run script
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm start
+
+      - name: commit files
+        run: |
+          git config --local user.email "98199146+initialrise@users.noreply.github.com"
+          git config --local user.name "initialrise"
+          echo `date +%s` > commit.txt
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "Dumped notices on $(date)" --allow-empty)
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main 
